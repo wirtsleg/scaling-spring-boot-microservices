@@ -41,7 +41,7 @@ public class WebSocketConfig extends AbstractSecurityWebSocketMessageBrokerConfi
     public static final int MAX_WORKERS_COUNT = Math.max(2, Runtime.getRuntime().availableProcessors());
     public static final int TASK_QUEUE_SIZE = 10_000;
     public static final String[] BROKER_PREFIXES = new String[]{"/topic"};
-    public static final String[] APP_PREFIXES = new String[]{"/topic/", "/user", "/app"};
+    public static final String[] APP_PREFIXES = new String[]{"/app"};
 
     @Lazy
     private final SimpMessagingTemplate messagingTemplate;

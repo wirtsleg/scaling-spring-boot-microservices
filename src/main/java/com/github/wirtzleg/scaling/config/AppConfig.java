@@ -7,6 +7,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import javax.sql.DataSource;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+
+import static com.github.wirtzleg.scaling.config.WebSocketConfig.MAX_WORKERS_COUNT;
 
 @Configuration
 public class AppConfig {
@@ -19,5 +23,10 @@ public class AppConfig {
                         .usingDbTime()
                         .build()
         );
+    }
+
+    @Bean
+    public ScheduledExecutorService wsSubscriptionScheduler() {
+        return Executors.newScheduledThreadPool(MAX_WORKERS_COUNT);
     }
 }
