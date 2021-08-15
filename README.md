@@ -15,6 +15,7 @@ After that Spring will use `build` dir as a source for static files.
 1. Build frontend
 2. `docker/docker-compose.yml` contains all necessary datasources (PostgreSQL, RabbitMQ, Redis). Run it with `docker-compose up -d` command.
 3. Run backend with a command ` ./mvnw spring-boot:run -Dspring-boot.run.arguments=--server.port=8080`. Use different ports if you want to run multiple instances simultaneously.
+4. Go to http://localhost:8080. Migrations will create 6 users: *Neo*, *Boris Britva*, *Gendalf*, *Thor*, *Forrest Gump* and *Tyler Durden* with `123` passwords.
 
 ## Branches
 
