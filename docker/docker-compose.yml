@@ -1,0 +1,33 @@
+version: '3.2'
+
+volumes:
+  postgres:
+
+services:
+  postgres:
+    image: postgres:13.3
+    container_name: postgres
+    volumes:
+      - type: volume
+        source: postgres
+        target: /var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: chatapp
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgrespass
+    ports:
+      - "5432:5432"
+  rabbitmq:
+    image: rabbitmq:3.9
+    container_name: rabbitmq
+    ports:
+      - "61613:61613"
+      - "15672:15672"
+    volumes:
+      - "./rabbit_enabled_plugins:/etc/rabbitmq/enabled_plugins"
+  redis:
+    image: redis:6.2-alpine
+    container_name: redis
+    ports:
+      - "6379:6379"
+
