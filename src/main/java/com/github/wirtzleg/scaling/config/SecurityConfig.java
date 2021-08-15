@@ -7,17 +7,11 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.session.MapSessionRepository;
-import org.springframework.session.Session;
-import org.springframework.session.SessionRepository;
-import org.springframework.session.config.annotation.web.http.EnableSpringHttpSession;
-
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import org.springframework.session.jdbc.config.annotation.web.http.EnableJdbcHttpSession;
 
 @Configuration
 @EnableWebSecurity
-@EnableSpringHttpSession
+@EnableJdbcHttpSession
 @RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
@@ -34,16 +28,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .deleteCookies("SESSION")
                 .and()
                 .csrf().disable();
-    }
-
-    @Bean
-    public Map<String, Session> sessionMap() {
-        return new ConcurrentHashMap<>();
-    }
-
-    @Bean
-    public SessionRepository sessionRepository() {
-        return new MapSessionRepository(sessionMap());
     }
 
     @Bean

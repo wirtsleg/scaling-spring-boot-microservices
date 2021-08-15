@@ -2,6 +2,8 @@ package com.github.wirtzleg.scaling.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.javacrumbs.shedlock.spring.annotation.EnableSchedulerLock;
+import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +18,7 @@ public class SubscriptionService {
     private final StripeGateway stripeGateway;
 
     @Scheduled(cron = "*/30 * * * * *")
+    @SchedulerLock(name = "checkSubscriptions", lockAtLeastFor = "10s", lockAtMostFor = "20s")
     public void checkSubscriptions() {
         log.info("Checking subscriptions...");
 

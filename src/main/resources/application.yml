@@ -7,3 +7,8 @@ spring:
   web:
     resources:
       static-locations: file:frontend/chatapp/build
+  session:
+    store-type: jdbc
+
+logging.level.org.springframework.messaging.simp.stomp: DEBUG
+

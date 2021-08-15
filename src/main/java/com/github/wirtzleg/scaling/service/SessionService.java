@@ -3,31 +3,31 @@ package com.github.wirtzleg.scaling.service;
 import com.github.wirtzleg.scaling.dto.User;
 import com.github.wirtzleg.scaling.dto.UserResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.session.FindByIndexNameSessionRepository;
 import org.springframework.session.Session;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.time.Duration;
 import java.time.Instant;
-import java.util.*;
-
-import static com.github.wirtzleg.scaling.utils.Utils.user;
+import java.util.Collection;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class SessionService {
     private final UserService userService;
-    private final Map<String, Session> sessionMap;
+    private final FindByIndexNameSessionRepository<? extends Session> sessionRepository;
 
     public List<UserResponse> getContacts(Long userId) {
         Instant now = Instant.now();
         List<User> contacts = userService.getContacts(userId);
 
-        Map<User, List<Session>> groupedSessions = groupSessions(contacts);
-
         return contacts.stream()
                 .map(user -> {
-                    Instant lastAccessedTime = getLastAccessedTime(groupedSessions.get(user));
+                    Instant lastAccessedTime = getLastAccessedTime(
+                            sessionRepository.findByPrincipalName(user.getUsername()).values()
+                    );
 
                     boolean online = Duration.between(lastAccessedTime, now).getSeconds() < 60;
 
@@ -47,22 +47,5 @@ public class SessionService {
         }
 
         return lastAccessedTime;
-    }
-
-    private Map<User, List<Session>> groupSessions(List<User> contacts0) {
-        Set<User> contacts = new HashSet<>(contacts0);
-        Map<User, List<Session>> grouped = new HashMap<>();
-
-        for (Session session : sessionMap.values()) {
-            User user = user(session.getAttribute("SPRING_SECURITY_CONTEXT"));
-
-            if (user == null || !contacts.contains(user))
-                continue;
-
-            grouped.computeIfAbsent(user, key -> new ArrayList<>())
-                    .add(session);
-        }
-
-        return grouped;
     }
 }

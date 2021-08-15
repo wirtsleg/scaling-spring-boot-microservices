@@ -1,6 +1,8 @@
 package com.github.wirtzleg.scaling.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.wirtzleg.scaling.config.interceptor.EscapeSlashesInterceptor;
+import com.github.wirtzleg.scaling.config.interceptor.LoggingInterceptor;
 import com.github.wirtzleg.scaling.service.SessionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -62,24 +64,27 @@ public class WebSocketConfig extends AbstractSecurityWebSocketMessageBrokerConfi
     public void configureMessageBroker(MessageBrokerRegistry registry) {
         registry.setPreservePublishOrder(true)
                 .setApplicationDestinationPrefixes(APP_PREFIXES)
-                .enableSimpleBroker(BROKER_PREFIXES)
-                .setHeartbeatValue(HEARTBEAT)
+                .enableStompBrokerRelay(BROKER_PREFIXES)
+                .setUserDestinationBroadcast("/topic/unresolved.user.dest")
+                .setUserRegistryBroadcast("/topic/registry.broadcast")
                 .setTaskScheduler(getHeartbeatScheduler());
 
         registry.configureBrokerChannel()
+                .interceptors(new LoggingInterceptor(), new EscapeSlashesInterceptor())
                 .taskExecutor().corePoolSize(1).maxPoolSize(MAX_WORKERS_COUNT).queueCapacity(TASK_QUEUE_SIZE);
     }
 
     @Override
     protected void customizeClientInboundChannel(ChannelRegistration registration) {
         registration
-                .interceptors(sessionRepositoryInterceptor())
+                .interceptors(new LoggingInterceptor(), new EscapeSlashesInterceptor(), sessionRepositoryInterceptor())
                 .taskExecutor().corePoolSize(1).maxPoolSize(MAX_WORKERS_COUNT).queueCapacity(TASK_QUEUE_SIZE);
     }
 
     @Override
     public void configureClientOutboundChannel(ChannelRegistration registration) {
         registration
+                .interceptors(new LoggingInterceptor())
                 .taskExecutor().corePoolSize(1).maxPoolSize(MAX_WORKERS_COUNT).queueCapacity(TASK_QUEUE_SIZE);
     }
 
