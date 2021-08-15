@@ -19,7 +19,6 @@ import java.util.List;
 import static com.github.wirtzleg.scaling.utils.Utils.chatId;
 import static com.github.wirtzleg.scaling.utils.Utils.isChatMember;
 
-@CrossOrigin
 @Controller
 @RequestMapping("/api/v1/chat")
 @RequiredArgsConstructor
