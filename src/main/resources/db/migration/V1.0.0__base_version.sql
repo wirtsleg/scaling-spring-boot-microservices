@@ -28,3 +28,13 @@ CREATE TABLE chat_messages
 );
 CREATE INDEX chat_messages_chat_id_idx ON chat_messages (chat_id);
 CREATE INDEX chat_messages_created_at_idx ON chat_messages (created_at DESC);
+
+CREATE TABLE emails
+(
+    id           BIGSERIAL PRIMARY KEY,
+    recipient_id BIGINT  NOT NULL,
+    type         VARCHAR NOT NULL,
+    status       VARCHAR NOT NULL,
+    FOREIGN KEY (recipient_id) REFERENCES users(id) ON DELETE CASCADE
+);
+CREATE INDEX emails_status_idx ON emails (status);
