@@ -17,3 +17,10 @@ insert into contacts (user1_id, user2_id) VALUES (4, 1);
 insert into contacts (user1_id, user2_id) VALUES (4, 3);
 insert into contacts (user1_id, user2_id) VALUES (5, 1);
 insert into contacts (user1_id, user2_id) VALUES (6, 1);
+
+insert into emails(recipient_id, type, status) VALUES (1, 'WELCOME', 'NEW');
+insert into emails(recipient_id, type, status) VALUES (2, 'WELCOME', 'NEW');
+insert into emails(recipient_id, type, status) VALUES (3, 'WELCOME', 'NEW');
+insert into emails(recipient_id, type, status) VALUES (4, 'WELCOME', 'NEW');
+insert into emails(recipient_id, type, status) VALUES (5, 'WELCOME', 'NEW');
+insert into emails(recipient_id, type, status) VALUES (6, 'WELCOME', 'NEW');
