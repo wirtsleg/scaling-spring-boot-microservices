@@ -23,3 +23,4 @@ After that Spring will use `build` dir as a source for static files.
 2. **scalable** branch contains fully-scalable application, using RabbitMQ as an external message broker, Redis for cache, and PostgreSQL for sessions.
 3. **scalable-crazy** branch contains an example of an approach to fix a problem of **@SubscribeMapping** in a *BeanPostProcessor* manner. It is fully-scalable, but
 has a huge disadvantage - every subscribed user gets an initial response.
+4. **scalable-manual-shedlock** branch shows how to use ShedLock manually without annotations.
