@@ -1,5 +1,6 @@
 package com.github.wirtzleg.scaling.service;
 
+import java.util.List;
 import com.github.wirtzleg.scaling.dto.Email;
 import com.github.wirtzleg.scaling.repository.EmailRepository;
 import lombok.RequiredArgsConstructor;
@@ -8,8 +9,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 import static com.github.wirtzleg.scaling.dto.EmailStatus.NEW;
 import static com.github.wirtzleg.scaling.dto.EmailStatus.SENT;
 
@@ -17,7 +16,7 @@ import static com.github.wirtzleg.scaling.dto.EmailStatus.SENT;
 @Service
 @RequiredArgsConstructor
 public class EmailService {
-    private static final PageRequest BATCH_SIZE = PageRequest.of(0, 2);
+    private static final int BATCH_SIZE = 2;
 
     private final EmailRepository emailRepo;
 
@@ -25,7 +24,7 @@ public class EmailService {
     public void sendEmails() {
         List<Email> emails;
 
-        while (!(emails = emailRepo.findAllByStatus(NEW.name(), BATCH_SIZE)).isEmpty()) {
+        while (!(emails = emailRepo.findAllByStatus(NEW.name(), PageRequest.of(0, BATCH_SIZE))).isEmpty()) {
             for (Email email : emails) {
                 // prepare email template
                 // send email
