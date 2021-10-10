@@ -1,6 +1,9 @@
 package com.github.wirtzleg.scaling.config;
 
+import java.util.EnumSet;
+import java.util.List;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.wirtzleg.scaling.config.interceptor.EscapeSlashesInterceptor;
 import com.github.wirtzleg.scaling.service.SessionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -25,10 +28,10 @@ import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketTransportRegistration;
 import org.springframework.web.socket.messaging.StompSubProtocolErrorHandler;
 
-import java.util.EnumSet;
-import java.util.List;
-
-import static org.springframework.messaging.simp.SimpMessageType.*;
+import static org.springframework.messaging.simp.SimpMessageType.CONNECT;
+import static org.springframework.messaging.simp.SimpMessageType.MESSAGE;
+import static org.springframework.messaging.simp.SimpMessageType.SUBSCRIBE;
+import static org.springframework.messaging.simp.SimpMessageType.UNSUBSCRIBE;
 
 @Configuration
 @RequiredArgsConstructor
@@ -67,13 +70,14 @@ public class WebSocketConfig extends AbstractSecurityWebSocketMessageBrokerConfi
                 .setTaskScheduler(getHeartbeatScheduler());
 
         registry.configureBrokerChannel()
+                .interceptors(new EscapeSlashesInterceptor())
                 .taskExecutor().corePoolSize(1).maxPoolSize(MAX_WORKERS_COUNT).queueCapacity(TASK_QUEUE_SIZE);
     }
 
     @Override
     protected void customizeClientInboundChannel(ChannelRegistration registration) {
         registration
-                .interceptors(sessionRepositoryInterceptor())
+                .interceptors(sessionRepositoryInterceptor(), new EscapeSlashesInterceptor())
                 .taskExecutor().corePoolSize(1).maxPoolSize(MAX_WORKERS_COUNT).queueCapacity(TASK_QUEUE_SIZE);
     }
 
